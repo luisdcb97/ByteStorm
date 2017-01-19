@@ -206,18 +206,16 @@ public class Board{
   
   public float moveBoardUP(){
     float points =0;
-    boolean fused;
     for(int c=0; c<this.tamanho; c++){
       for(int l=1; l<this.tamanho; l++){
-        fused = false;
         if( matriz[c][l] == null){
            continue; 
         }
         for(int moved = 0; l-1-moved >= 0; moved++){
-          if( matriz[c][l-moved].equals(matriz[c][l-1-moved]) && !fused){
+          if( matriz[c][l-moved].equals(matriz[c][l-1-moved])  && !matriz[c][l-moved].getFused() && !matriz[c][l-1-moved].getFused()){
            matriz[c][l-moved] = null;
            points += matriz[c][l-1-moved].doublePiece();
-           fused = true;
+           matriz[c][l-1-moved].setFused(true);
           }
           
           if(matriz[c][l-1-moved] == null ){
@@ -235,18 +233,16 @@ public class Board{
   
   public float moveBoardDOWN(){
     float points =0;
-    boolean fused;
     for(int c=0; c<this.tamanho; c++){
-      for(int l=tamanho-1; l>=0; l--){
-        fused = false;
+      for(int l=tamanho-2; l>=0; l--){
         if( matriz[c][l] == null){
            continue; 
         }
-        for(int moved = 0; l+1+moved <= this.tamanho-1; moved++){
-          if( matriz[c][l+moved].equals(matriz[c][l+1+moved]) && !fused){
+        for(int moved = 0; l+1+moved < this.tamanho; moved++){
+          if( matriz[c][l+moved].equals(matriz[c][l+1+moved]) && !matriz[c][l+moved].getFused() && !matriz[c][l+1+moved].getFused()){
            matriz[c][l+moved] = null;
            points += matriz[c][l+1+moved].doublePiece();
-           fused = true;
+           matriz[c][l+1+moved].setFused(true);
           }
           
           if(matriz[c][l+1+moved] == null ){
@@ -262,32 +258,23 @@ public class Board{
     
   }
   
-  public float moveBoardVertical(int codigoTecla){
-    float points = 0;
-    boolean fused;
-    if(codigoTecla == UP){
-        
-    }
-    else if(codigoTecla == DOWN){
-      
-    }
-    
-    for(int c=0; c<this.tamanho; c++){
-      for(int l=tamanho-1; l>=0; l--){
-        fused = false;
+  public float moveBoardLEFT(){
+    float points =0;
+    for(int c=1; c<this.tamanho; c++){
+      for(int l=0; l<this.tamanho; l++){
         if( matriz[c][l] == null){
            continue; 
         }
-        for(int moved = (1) % this.tamanho; l+1+moved <= this.tamanho-1; moved++){
-          if( matriz[c][l+moved].equals(matriz[c][l+1+moved]) && !fused){
-           matriz[c][l+moved] = null;
-           points += matriz[c][l+1+moved].doublePiece();
-           fused = true;
+        for(int moved = 0; c-1-moved >= 0; moved++){
+          if( matriz[c-moved][l].equals(matriz[c-1-moved][l]) && !matriz[c-moved][l].getFused() && !matriz[c-1-moved][l].getFused()){
+           matriz[c-moved][l] = null;
+           points += matriz[c-1-moved][l].doublePiece();
+           matriz[c-1-moved][l].setFused(true);
           }
           
-          if(matriz[c][l+1+moved] == null ){
-              matriz[c][l+1+moved] = matriz[c][l+moved];
-              matriz[c][l+moved] = null;
+          if(matriz[c-1-moved][l] == null ){
+              matriz[c-1-moved][l] = matriz[c-moved][l];
+              matriz[c-moved][l] = null;
           }
         
         }
@@ -297,6 +284,109 @@ public class Board{
     return points;
     
   }
+  
+  public float moveBoardRIGHT(){
+    float points =0;
+    for(int c=tamanho-2; c>=0; c--){
+      for(int l=0; l<tamanho; l++){
+        if( matriz[c][l] == null){
+           continue; 
+        }
+        for(int moved = 0; c+1+moved < this.tamanho; moved++){
+          if( matriz[c+moved][l].equals(matriz[c+1+moved][l]) && !matriz[c+moved][l].getFused() && !matriz[c+1+moved][l].getFused()){
+           matriz[c+moved][l] = null;
+           points += matriz[c+1+moved][l].doublePiece();
+           matriz[c+1+moved][l].setFused(true);
+          }
+          
+          if(matriz[c+1+moved][l] == null ){
+              matriz[c+1+moved][l] = matriz[c+moved][l];
+              matriz[c+moved][l] = null;
+          }
+        
+        }
+      }
+    }
+    
+    return points;
+    
+  }
+  
+  public void resetFused(){
+    for(int c=0; c<this.tamanho; c++){
+      for(int l=0; l<this.tamanho; l++){
+        if( matriz[c][l] != null){
+          matriz[c][l].setFused(false);
+        }  
+      }
+    }
+  }
+  
+  public boolean canMove(){
+    boolean moveable = false;
+    
+    for(int c=0; c<this.tamanho; c++){
+      for(int l=0; l<this.tamanho; l++){
+        
+        if(this.matriz[c][l] == null
+        || (c-1 > 0 && this.matriz[c][l].equals(this.matriz[c-1][l]))
+        || (c+1 < this.tamanho && this.matriz[c][l].equals(this.matriz[c+1][l]))
+        || (l-1 > 0 && this.matriz[c][l].equals(this.matriz[c][l-1]))
+        || (l+1 < this.tamanho && this.matriz[c][l].equals(this.matriz[c][l+1]))
+        ){
+          moveable = true;
+          break;
+        }
+        
+      }
+      
+      if(moveable == true){
+        break;
+      }
+    }
+    
+    return moveable;
+  }
+  
+  public boolean canMove(int direction){
+    boolean moveable = false;
+    
+    for(int c=0; c<this.tamanho; c++){
+      for(int l=0; l<this.tamanho; l++){
+        
+        if( matriz[c][l] == null){
+         continue; 
+        }
+        
+        if( ( direction == LEFT && (c-1 > 0 && (matriz[c-1][l] == null || this.matriz[c][l].equals(this.matriz[c-1][l]) ) ) )
+           || ( direction == RIGHT && (c+1 < this.tamanho && (matriz[c+1][l] == null || this.matriz[c][l].equals(this.matriz[c+1][l]) ) ) ) 
+           || ( direction == DOWN  && (l-1 > 0 && (matriz[c][l-1] == null || this.matriz[c][l].equals(this.matriz[c][l-1]) ) ) ) 
+           || ( direction == UP && (l+1 < this.tamanho && (matriz[c][l+1] == null || this.matriz[c][l].equals(this.matriz[c][l+1]) ) ) ) 
+        ){
+          moveable = true;
+          break;
+        }
+        
+        /*if( ( (direction == LEFT || direction == RIGHT) && ( (c-1 > 0 && (matriz[c-1][l] == null || this.matriz[c][l].equals(this.matriz[c-1][l]) )  )
+            || (c+1 < this.tamanho && (matriz[c+1][l] == null || this.matriz[c][l].equals(this.matriz[c+1][l]) ) ) ) ) 
+        || ( (direction == DOWN || direction == UP) && ( (l-1 > 0 && (matriz[c][l-1] == null || this.matriz[c][l].equals(this.matriz[c][l-1]) ) ) 
+            || (l+1 < this.tamanho && (matriz[c][l+1] == null || this.matriz[c][l].equals(this.matriz[c][l+1]) ) ) ) )
+        ){
+          moveable = true;
+          break;
+        }*/
+        
+        
+      }
+      if(moveable == true){
+        break;
+      }
+    }
+    if(!moveable) println("FALSE");
+    return moveable;
+  }
+  
+  
   
   public int getTamanho(){
     return this.tamanho;

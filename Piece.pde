@@ -2,6 +2,7 @@ public class Piece{
 
   private int number;  // multiples of 2 between 1 and 512 inclusive
   private int exponent; // multiples of 10 
+  private boolean fused; // if the piece has been fused before
   
   public Piece(int baseVal, int baseExp, float prob){
     this.generateNumber(baseVal,baseExp, prob);
@@ -45,6 +46,14 @@ public class Piece{
   
   public int getExponent(){
    return this.exponent; 
+  }
+  
+  public boolean getFused(){
+   return this.fused; 
+  }
+  
+  public void setFused(boolean set){
+   this.fused = set; 
   }
   
   public boolean equals(Piece peca){

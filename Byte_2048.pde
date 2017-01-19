@@ -1,5 +1,6 @@
 public Board campo;
 public float score;
+public boolean lost;
 
 void setup(){
   noStroke();
@@ -13,6 +14,7 @@ void setup(){
   
   campo = new Board(tam, slotSize, padding,"Normal", color(175), color(200));
   score = 0;
+  lost = false;
 }
 
 void draw(){
@@ -21,6 +23,13 @@ void draw(){
    fill(0);
    textSize(32);
    text("Score:" + score, width/2, 50);
+   if(lost == true){
+     fill(255, 150);
+     rect(0, 0, width, height);
+     fill(0);
+     textSize(50);
+     text("YOU LOST", width/2, height/2);
+   }
 }
 
 void drawBoard(Board tabuleiro){
@@ -33,15 +42,30 @@ void drawBoard(Board tabuleiro){
 }
 
 void keyReleased(){
- switch(keyCode){
-  case UP:
-   score += campo.moveBoardUP();
-   campo.randomPiece();
-   break;
-  case DOWN:
-   score += campo.moveBoardDOWN();
-   campo.randomPiece();
-   break;
-  default:
- }
+  if(lost){
+   return; 
+  }
+  if(keyCode == DOWN || keyCode == UP || keyCode == RIGHT || keyCode == LEFT){ 
+    switch(keyCode){
+      case UP:
+       score += campo.moveBoardUP();
+       break;
+      case DOWN:
+       score += campo.moveBoardDOWN();
+       break;
+      case LEFT:
+       score += campo.moveBoardLEFT();
+       break;
+      case RIGHT:
+       score += campo.moveBoardRIGHT();
+       break;
+      default:
+    }
+    if(campo.canMove(keyCode)){
+      campo.randomPiece();
+      campo.resetFused();
+    }
+  }
+   
+   lost = !campo.canMove();
 }
