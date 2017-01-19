@@ -358,23 +358,15 @@ public class Board{
          continue; 
         }
         
-        if( ( direction == LEFT && (c-1 > 0 && (matriz[c-1][l] == null || this.matriz[c][l].equals(this.matriz[c-1][l]) ) ) )
+        if( ( direction == LEFT && (c-1 >= 0 && (matriz[c-1][l] == null || this.matriz[c][l].equals(this.matriz[c-1][l]) ) ) )
            || ( direction == RIGHT && (c+1 < this.tamanho && (matriz[c+1][l] == null || this.matriz[c][l].equals(this.matriz[c+1][l]) ) ) ) 
-           || ( direction == DOWN  && (l-1 > 0 && (matriz[c][l-1] == null || this.matriz[c][l].equals(this.matriz[c][l-1]) ) ) ) 
-           || ( direction == UP && (l+1 < this.tamanho && (matriz[c][l+1] == null || this.matriz[c][l].equals(this.matriz[c][l+1]) ) ) ) 
+           || ( direction == UP  && (l-1 >= 0 && (matriz[c][l-1] == null || this.matriz[c][l].equals(this.matriz[c][l-1]) ) ) ) 
+           || ( direction == DOWN && (l+1 < this.tamanho && (matriz[c][l+1] == null || this.matriz[c][l].equals(this.matriz[c][l+1]) ) ) ) 
         ){
           moveable = true;
           break;
         }
         
-        /*if( ( (direction == LEFT || direction == RIGHT) && ( (c-1 > 0 && (matriz[c-1][l] == null || this.matriz[c][l].equals(this.matriz[c-1][l]) )  )
-            || (c+1 < this.tamanho && (matriz[c+1][l] == null || this.matriz[c][l].equals(this.matriz[c+1][l]) ) ) ) ) 
-        || ( (direction == DOWN || direction == UP) && ( (l-1 > 0 && (matriz[c][l-1] == null || this.matriz[c][l].equals(this.matriz[c][l-1]) ) ) 
-            || (l+1 < this.tamanho && (matriz[c][l+1] == null || this.matriz[c][l].equals(this.matriz[c][l+1]) ) ) ) )
-        ){
-          moveable = true;
-          break;
-        }*/
         
         
       }

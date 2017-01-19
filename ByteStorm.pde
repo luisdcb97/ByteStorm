@@ -45,7 +45,7 @@ void keyReleased(){
   if(lost){
    return; 
   }
-  if(keyCode == DOWN || keyCode == UP || keyCode == RIGHT || keyCode == LEFT){ 
+  if( (keyCode == DOWN || keyCode == UP || keyCode == RIGHT || keyCode == LEFT) && campo.canMove(keyCode)){ 
     switch(keyCode){
       case UP:
        score += campo.moveBoardUP();
@@ -61,10 +61,10 @@ void keyReleased(){
        break;
       default:
     }
-    if(campo.canMove(keyCode)){
-      campo.randomPiece();
-      campo.resetFused();
-    }
+     
+    campo.randomPiece();
+    campo.resetFused();
+    
   }
    
    lost = !campo.canMove();
