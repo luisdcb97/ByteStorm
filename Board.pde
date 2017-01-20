@@ -107,6 +107,24 @@ public class Board{
    return criado; // retorna true se uma nova peca foi criada
   }
   
+  public void levelUp(){
+    for( int l = 0; l < this.tamanho; l++){
+     for( int c = 0; c < this.tamanho; c++){
+       if(this.matriz[l][c] != null && this.matriz[l][c].getValue() == this.baseValue){
+         this.matriz[l][c].doublePiece();
+       }
+     }
+    }
+    
+    this.baseValue = this.baseValue * 2;
+    
+    while(this.baseValue >= 1024){
+     this.baseValue = this.baseValue / 1024;
+     this.baseExponent += 10;
+    }
+    
+  }
+  
   public void desenha(float initX, float initY, float size){
     fill(this.corPadding);
     rect(initX, initY, size, size, 10);
@@ -147,17 +165,19 @@ public class Board{
     int green = 0;
     int blue = 0;
     
+    /* change this*/
+    
     int pieceVal = this.matriz[col][lin].getValue();
     int pieceExp = this.matriz[col][lin].getExponent();
     
-    if( pieceExp >= baseExponent + 10){
-      red = max(40, 80 - floor(10 * log(pieceVal)/log(2)) );
-      blue = max(55, 100 - floor(10 * log(pieceVal)/log(2)) );
+    if( pieceExp >= this.baseExponent + 10){
+      red = max(40, 80 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
+      blue = max(55, 100 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
       // lower values have lighter purple tones
     }
     else{
-      red = max(170, 255 - floor(10 * log(pieceVal)/log(2)) );
-      green = max(90, 190 - floor(20 * log(pieceVal)/log(2)) );
+      red = max(170, 255 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
+      green = max(90, 190 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
       // lower values have lighter orange-yellow tones
     }
     
@@ -418,4 +438,6 @@ public class Board{
   public void newPiece(int lin, int col){
     this.matriz[col][lin] = new Piece(this.baseValue, this.baseExponent, this.probDuploValor);
   }
+  
+  
 }
