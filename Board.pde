@@ -155,34 +155,37 @@ public class Board{
     textSize(24);
     text(this.matriz[col][lin].getValue(), initX+ size/2, initY+ size/2);
     textSize(12);
-    text(escala, 0, 2, initX+ size/2, initY+ size*0.85);
+    text(escala, 0, 2, initX + size/2, initY+ size*0.85);
     
   }
   
   
   private color generateColor(int col, int lin){
-    int red = 0;
-    int green = 0;
-    int blue = 0;
+    int hue = 0;
     
-    /* change this*/
+    colorMode(HSB, 360, 100, 100);
     
     int pieceVal = this.matriz[col][lin].getValue();
     int pieceExp = this.matriz[col][lin].getExponent();
+    float multiplier = (log(pieceVal)/log(2) - log(this.baseValue)/log(2) + pieceExp - this.baseExponent);
+    color cor;
     
-    if( pieceExp >= this.baseExponent + 10){
-      red = max(40, 80 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
-      blue = max(55, 100 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
-      // lower values have lighter purple tones
+    
+    if(multiplier > 9){
+       hue = round( 280 - 8 * multiplier );
+       cor = color(hue, 100, 70);
     }
     else{
-      red = max(170, 255 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
-      green = max(90, 190 - floor(10 * (log(pieceVal)/log(2) + pieceExp%10) ) );
-      // lower values have lighter orange-yellow tones
+       hue = round( 50 - 5 * multiplier );
+       cor = color(hue, 100, 90);
     }
     
     
-    return color(red, green, blue);
+    
+    
+    colorMode(RGB, 255, 255, 255);
+    
+    return cor;
     
   }
   

@@ -1,3 +1,5 @@
+import java.util.Hashtable;
+
 private Board campo;  // tabuleiro de jogo
 private float score;  // pontuacao
 private float memoryCap;  // maximo score possivel
@@ -24,6 +26,11 @@ private float levelWidth;
 private float levelHeight;
 
 
+private Hashtable<String,Integer> aidButtons = new Hashtable<String,Integer>();
+
+private float aidButtonSize;
+private boolean doublePiece;
+
 
 void setup(){
   noStroke();  
@@ -49,17 +56,51 @@ void setup(){
   memoryX = width / 2;
   memoryY = 0.1 * (height - tam) / 2;
   
+  aidButtonSize = 35;
+  
+  aidButtons.put("duplica", 0);
+  aidButtons.put("troca", 1);
+  aidButtons.put("elimina", 2);
+  aidButtons.put("cria", 3);
+  
   lost = false;
+  doublePiece = false;
 }
 
 void draw(){
    background(120);
    drawBoard(campo);
-   
    drawScore();
+   drawAidButtons();
+   
+   
    if(lost == true){
      defeat();
    }
+}
+
+void drawAidButtons(){
+  fill(120, 40, 150);
+  triangle( 0, height, 0, 0, (width - boardSize) *0.45, height);
+  
+  fill(0, 0, 200);
+  ellipse(aidButtonSize , height - (aidButtons.get("duplica") * 1.5 +1) * aidButtonSize, aidButtonSize, aidButtonSize);
+  
+  ellipse(aidButtonSize , height - (aidButtons.get("troca") * 1.5 +1) * aidButtonSize, aidButtonSize, aidButtonSize);
+  
+  ellipse(aidButtonSize , height - (aidButtons.get("elimina") * 1.5 +1) * aidButtonSize, aidButtonSize, aidButtonSize);
+  
+  ellipse(aidButtonSize , height - (aidButtons.get("cria") * 1.5 +1) *aidButtonSize, aidButtonSize, aidButtonSize);
+  
+  fill(200, 0, 0);
+  if(doublePiece){
+    ellipse(aidButtonSize , height - (aidButtons.get("duplica") * 1.5 +1) * aidButtonSize, aidButtonSize, aidButtonSize);
+    fill(255);
+    textSize(18);
+    textAlign(CENTER, CENTER);
+    text('X', aidButtonSize , height - (aidButtons.get("duplica") * 1.5 +1) * aidButtonSize);
+    textAlign(CENTER);
+  }
 }
 
 void drawScore(){
@@ -326,9 +367,11 @@ void mouseReleased(){
          
          levelIncrease();
      }
+     else if( pow((mouseX - aidButtonSize), 2) + pow((mouseY - (height - (aidButtons.get("duplica") *1.5 +1) * aidButtonSize) ), 2) <= pow(aidButtonSize/2, 2) ){
+       doublePiece = !doublePiece;
      
+     }
     }
-    
   }
   
 }
