@@ -22,17 +22,20 @@ public class Board{
     this.baseExponent = 0;
     
     switch(gameMode){
-      case "Very Easy":
+      case "VERY EASY":
         this.probDuploValor = 50.0;
         break;
-      case "Easy":
+      case "EASY":
         this.probDuploValor = 25.0;
         break;
-      case "Hard":
+      case "HARD":
         this.probDuploValor = 2.5;
         break;
-      case "Very Hard":
+      case "VERY HARD":
         this.probDuploValor = 0.5;
+        break;
+      case "INSANE":
+        this.probDuploValor = 0;
         break;
       default:
         this.probDuploValor = 10.0;
@@ -374,7 +377,7 @@ public class Board{
         break;
       }
     }
-    if(!moveable) println("FALSE");
+    
     return moveable;
   }
   
