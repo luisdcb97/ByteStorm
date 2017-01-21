@@ -369,6 +369,7 @@ void mouseReleased(){
      }
      else if( pow((mouseX - aidButtonSize), 2) + pow((mouseY - (height - (aidButtons.get("duplica") *1.5 +1) * aidButtonSize) ), 2) <= pow(aidButtonSize/2, 2) ){
        doublePiece = !doublePiece;
+     
      }
     }
   }
