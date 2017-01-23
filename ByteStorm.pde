@@ -36,6 +36,7 @@ private boolean doublePiece;
 void setup(){  
   size(640, 480);
   noStroke();
+  noLoop();
   
   
   tam = 4; // numero de colunas e linhas da board
@@ -328,6 +329,7 @@ void drawBoard(Board tabuleiro){
 }
 
 void keyReleased(){
+  redraw();
   if(lost){
    return; 
   }
@@ -360,6 +362,7 @@ void keyReleased(){
 }
 
 void mouseReleased(){
+  redraw();
   if(mouseButton == LEFT){
     
     if(lost && mouseX >= restartButtonX && mouseX <= restartButtonX + restartButtonWidth  && mouseY >= restartButtonY && mouseY <= restartButtonY + restartButtonHeight){
