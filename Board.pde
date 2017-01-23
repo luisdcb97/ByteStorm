@@ -152,10 +152,12 @@ public class Board{
     char[] escala = generateOrdem(this.matriz[col][lin].getExponent());
     
     textAlign(CENTER);
-    textSize(24);
+    textSize(0.4 * size);
     text(this.matriz[col][lin].getValue(), initX+ size/2, initY+ size/2);
-    textSize(12);
-    text(escala, 0, 2, initX + size/2, initY+ size*0.85);
+    
+    textAlign(CENTER, CENTER);
+    textSize(0.3 * size);
+    text(escala, 0, 2, initX + size/2, initY+ size*0.8);
     
   }
   
