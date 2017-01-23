@@ -4,6 +4,8 @@ private Board campo;  // tabuleiro de jogo
 private float score;  // pontuacao
 private float memoryCap;  // maximo score possivel
 private float levelCap; // score necessario para subir de nivel
+private String difficulty; // dificuldade do jogo
+private int level; // nivel atual
 
 private boolean lost;  // se o jogador perdeu ou nao
 
@@ -11,7 +13,6 @@ private int tam;  // numero de colunas e linhas da board
 private float boardSize; // tamanho da board na janela de jogo,
 private float padding;  // tamanho do padding em relacao a board
 private float slotSize;  // tamanho do slot em relacao a board
-private String difficulty; // dificuldade do jogo
 
 private float restartButtonX;
 private float restartButtonY;
@@ -63,6 +64,7 @@ void setup(){
   aidButtons.put("elimina", 2);
   aidButtons.put("cria", 3);
   
+  level = 1;
   lost = false;
   doublePiece = false;
 }
@@ -223,6 +225,8 @@ void drawScore(){
     
     rect(0, 0, buttonHeight, buttonHeight);
     
+    fill(255);
+    text(level, buttonHeight/2, buttonHeight *2/3);
     
   popMatrix();
   
@@ -273,7 +277,8 @@ void memoryIncrease(){
 
 void levelIncrease(){
   score -= levelCap;
-  levelCap = (3 + 1 * cos(levelCap))  * levelCap;
+  level++;
+  levelCap = pow(level, 1.5)  * levelCap;
   campo.levelUp();
 }
 
