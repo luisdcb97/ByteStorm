@@ -127,7 +127,7 @@ public class Board{
   
   public void desenha(float initX, float initY, float size){
     fill(this.corPadding);
-    rect(initX, initY, size, size, 10);
+    rect(initX, initY, size, size, 0.05 * size);
     
     
     for( int l = 0; l < this.tamanho; l++){
@@ -141,12 +141,12 @@ public class Board{
   private void desenhaPeca(float initX, float initY, float size, int col, int lin){
     if(this.matriz[col][lin] == null){
       fill(this.corSlotVazio);
-      rect(initX, initY, size, size, 5);
+      rect(initX, initY, size, size, 0.1 * size);
       return;  
     }
     
     fill(this.generateColor(col, lin));
-    rect(initX, initY, size, size, 5);
+    rect(initX, initY, size, size, 0.1 * size);
     
     fill(0);  // black for text
     char[] escala = generateOrdem(this.matriz[col][lin].getExponent());
