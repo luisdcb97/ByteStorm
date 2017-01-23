@@ -34,6 +34,7 @@ private boolean doublePiece;
 
 
 void setup(){  
+  //fullScreen();
   size(640, 480);
   noStroke();
   noLoop();
@@ -52,10 +53,10 @@ void setup(){
   memoryCap = 250;
   levelCap = 100;
   
-  memoryWidth = 170;
-  memoryHeight = 25;
+  memoryWidth = boardSize / (1 +  0.15+ 1/4.0 * 0.15 +  2 * 0.05 );
+  memoryHeight = 0.15 * memoryWidth;
   levelWidth = memoryWidth;
-  levelHeight = 10;
+  levelHeight = 1/4.0 * memoryHeight;
   memoryX = width / 2;
   memoryY = 0.1 * (height - tam) / 2;
   
@@ -155,7 +156,8 @@ void drawScore(){
       tempExponent += 10;
     }
     
-    textSize(12);
+    //textSize(12);
+    textSize(0.4 * memoryHeight);
     String write1 = nf(tempScore,0,2) + ordemToString(tempExponent);
     
     textAlign(RIGHT, BOTTOM);
@@ -173,7 +175,7 @@ void drawScore(){
     
     textAlign(RIGHT, CENTER);
     String write2 = nf(tempScore,0,2) + ordemToString(tempExponent);
-    textSize(20);
+    textSize(0.6 * memoryHeight);
     text(write2, min(memoryWidth/2 + textWidth(write2)/2,  split), memoryHeight/2);
     textAlign(CENTER);
     
@@ -184,8 +186,8 @@ void drawScore(){
     */
     
     
-    int border = 2;
     float buttonHeight = memoryHeight + levelHeight;
+    int border = round(0.05 * buttonHeight);
     
     /* MEMORY INCREASE BUTTON */
     
@@ -233,6 +235,7 @@ void drawScore(){
     
     rect(0, 0, buttonHeight, buttonHeight);
     
+    textSize(0.5 * buttonHeight);
     fill(255);
     text(level, buttonHeight/2, buttonHeight *2/3);
     
