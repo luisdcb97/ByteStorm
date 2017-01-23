@@ -33,9 +33,10 @@ private float aidButtonSize;
 private boolean doublePiece;
 
 
-void setup(){
-  noStroke();  
+void setup(){  
   size(640, 480);
+  noStroke();
+  
   
   tam = 4; // numero de colunas e linhas da board
   
@@ -78,6 +79,12 @@ void draw(){
    
    if(lost == true){
      defeat();
+   }
+   
+   
+   if(!focused){
+     fill(25, 25, 25, 150);
+     rect(0, 0, width, height);
    }
 }
 
