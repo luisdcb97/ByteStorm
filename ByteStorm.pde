@@ -10,7 +10,7 @@ private int level; // nivel atual
 private boolean lost;  // se o jogador perdeu ou nao
 
 private int tam;  // numero de colunas e linhas da board
-private float boardSize; // tamanho da board na janela de jogo,
+private float boardSize; // tamanho da board na janela de jogo
 private float padding;  // tamanho do padding em relacao a board
 private float slotSize;  // tamanho do slot em relacao a board
 
@@ -34,8 +34,8 @@ private boolean doublePiece;
 
 
 void setup(){  
-  //fullScreen();
-  size(640, 480);
+  fullScreen();
+  //size(640, 480);
   noStroke();
   noLoop();
   
@@ -289,7 +289,7 @@ void memoryIncrease(){
 void levelIncrease(){
   score -= levelCap;
   level++;
-  levelCap = pow(level, 1.5)  * levelCap;
+  levelCap += pow(level, 0.5)  * levelCap;
   campo.levelUp();
 }
 
