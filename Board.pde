@@ -173,7 +173,7 @@ public class Board{
     color cor;
     
     
-    if(multiplier > 9){
+    if(multiplier >= 9){
        hue = round( 280 - 8 * multiplier );
        cor = color(hue, 100, 70);
     }

@@ -6,6 +6,8 @@ private float memoryCap;  // maximo score possivel
 private float levelCap; // score necessario para subir de nivel
 private String difficulty; // dificuldade do jogo
 private int level; // nivel atual
+private float difficultyMultiplier;
+
 
 private boolean lost;  // se o jogador perdeu ou nao
 
@@ -34,11 +36,13 @@ private boolean doublePiece;
 
 
 void setup(){  
-  fullScreen();
-  //size(640, 480);
+  //fullScreen();
+  size(640, 480);
   noStroke();
   noLoop();
   
+  difficulty = "INSANE";
+  difficultyMultiplier = decodeDifficulty(difficulty);
   
   tam = 4; // numero de colunas e linhas da board
   
@@ -46,12 +50,10 @@ void setup(){
   padding = 0.15 * boardSize/(tam+1);  // tamanho do padding em relacao a board
   slotSize = 0.85 * boardSize/tam;  // tamanho do slot em relacao a board
   
-  difficulty = "Normal";
-  
   campo = new Board(tam, slotSize, padding, difficulty, color(175), color(200));
   score = 0;
-  memoryCap = 250;
-  levelCap = 100;
+  memoryCap = 250 * (1/difficultyMultiplier);
+  levelCap = 100 * difficultyMultiplier;
   
   memoryWidth = boardSize / (1 +  0.15+ 1/4.0 * 0.15 +  2 * 0.05 );
   memoryHeight = 0.15 * memoryWidth;
@@ -289,7 +291,7 @@ void memoryIncrease(){
 void levelIncrease(){
   score -= levelCap;
   level++;
-  levelCap += pow(level, 0.5)  * levelCap;
+  levelCap += pow(level, 0.5) * difficultyMultiplier * levelCap;
   campo.levelUp();
 }
 
@@ -331,6 +333,33 @@ void drawBoard(Board tabuleiro){
   tabuleiro.desenha(boardInitialX, boardInitialY, tamanho);
 }
 
+float decodeDifficulty(String diff){
+  float multiplier;
+  
+  switch(diff){
+      case "VERY EASY":
+        multiplier = 0.65;
+        break;
+      case "EASY":
+        multiplier = 0.85;
+        break;
+      case "HARD":
+        multiplier = 1.25;
+        break;
+      case "VERY HARD":
+        multiplier = 1.5;
+        break;
+      case "INSANE":
+        multiplier = 2;
+        break;
+      default:
+        multiplier = 1;
+        break;
+    }
+  
+  return multiplier;
+}
+
 void keyReleased(){
   redraw();
   if(lost){
@@ -339,16 +368,16 @@ void keyReleased(){
   if( (keyCode == DOWN || keyCode == UP || keyCode == RIGHT || keyCode == LEFT) && campo.canMove(keyCode)){ 
     switch(keyCode){
       case UP:
-       score += campo.moveBoardUP();
+       score += campo.moveBoardUP() * (1/difficultyMultiplier);
        break;
       case DOWN:
-       score += campo.moveBoardDOWN();
+       score += campo.moveBoardDOWN() * (1/difficultyMultiplier);
        break;
       case LEFT:
-       score += campo.moveBoardLEFT();
+       score += campo.moveBoardLEFT() * (1/difficultyMultiplier);
        break;
       case RIGHT:
-       score += campo.moveBoardRIGHT();
+       score += campo.moveBoardRIGHT() * (1/difficultyMultiplier);
        break;
       default:
     }
