@@ -4,14 +4,12 @@ private Board campo;  // tabuleiro de jogo
 private float score;  // pontuacao
 private float memoryCap;  // maximo score possivel
 private float levelCap; // score necessario para subir de nivel
-private String difficulty; // dificuldade do jogo
 private int level; // nivel atual
 private float difficultyMultiplier;
 
 
 private boolean lost;  // se o jogador perdeu ou nao
 
-private int tam;  // numero de colunas e linhas da board
 private float boardSize; // tamanho da board na janela de jogo
 private float padding;  // tamanho do padding em relacao a board
 private float slotSize;  // tamanho do slot em relacao a board
@@ -41,26 +39,25 @@ void setup(){
   noStroke();
   noLoop();
   
-  difficulty = "INSANE";
-  difficultyMultiplier = decodeDifficulty(difficulty);
+  difficultyMultiplier = GameSettings.decodeDifficulty(GameSettings.DIFFICULTY);
   
-  tam = 4; // numero de colunas e linhas da board
   
   boardSize = 0.6 * min(width, height); // tamanho da board na janela de jogo,
-  padding = 0.15 * boardSize/(tam+1);  // tamanho do padding em relacao a board
-  slotSize = 0.85 * boardSize/tam;  // tamanho do slot em relacao a board
+  padding = 0.15 * boardSize/(GameSettings.SLOTS+1);  // tamanho do padding em relacao a board
+  slotSize = 0.85 * boardSize/GameSettings.SLOTS;  // tamanho do slot em relacao a board
   
-  campo = new Board(tam, slotSize, padding, difficulty, color(175), color(200));
+  campo = new Board(GameSettings.SLOTS, slotSize, padding, GameSettings.DIFFICULTY, color(175), color(200));
   score = 0;
-  memoryCap = 250 * (1/difficultyMultiplier);
-  levelCap = 100 * difficultyMultiplier;
+  level = GameSettings.INITIAL_LEVEL;
+  memoryCap = GameSettings.INITIAL_MEMORY_CAP * (1/difficultyMultiplier);
+  levelCap = GameSettings.INITIAL_LEVEL_CAP * difficultyMultiplier;
   
   memoryWidth = boardSize / (1 +  0.15+ 1/4.0 * 0.15 +  2 * 0.05 );
   memoryHeight = 0.15 * memoryWidth;
   levelWidth = memoryWidth;
   levelHeight = 1/4.0 * memoryHeight;
   memoryX = width / 2;
-  memoryY = 0.1 * (height - tam) / 2;
+  memoryY = 0.1 * (height - GameSettings.SLOTS) / 2;
   
   aidButtonSize = 35;
   
@@ -69,7 +66,6 @@ void setup(){
   aidButtons.put("elimina", 2);
   aidButtons.put("cria", 3);
   
-  level = 1;
   lost = false;
   doublePiece = false;
 }
@@ -333,32 +329,6 @@ void drawBoard(Board tabuleiro){
   tabuleiro.desenha(boardInitialX, boardInitialY, tamanho);
 }
 
-float decodeDifficulty(String diff){
-  float multiplier;
-  
-  switch(diff){
-      case "VERY EASY":
-        multiplier = 0.65;
-        break;
-      case "EASY":
-        multiplier = 0.85;
-        break;
-      case "HARD":
-        multiplier = 1.25;
-        break;
-      case "VERY HARD":
-        multiplier = 1.5;
-        break;
-      case "INSANE":
-        multiplier = 2;
-        break;
-      default:
-        multiplier = 1;
-        break;
-    }
-  
-  return multiplier;
-}
 
 void keyReleased(){
   redraw();
@@ -398,7 +368,7 @@ void mouseReleased(){
   if(mouseButton == LEFT){
     
     if(lost && mouseX >= restartButtonX && mouseX <= restartButtonX + restartButtonWidth  && mouseY >= restartButtonY && mouseY <= restartButtonY + restartButtonHeight){
-      campo = new Board(tam, slotSize, padding, difficulty, color(175), color(200));
+      campo = new Board(GameSettings.SLOTS, slotSize, padding, GameSettings.DIFFICULTY, color(175), color(200));
       score = 0;
       lost = false;
     }
