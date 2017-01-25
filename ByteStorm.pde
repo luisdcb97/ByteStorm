@@ -42,7 +42,6 @@ void setup() {
 
   difficultyMultiplier = GameSettings.decodeDifficulty(GameSettings.DIFFICULTY);
 
-
   boardSize = 0.6 * min(width, height) / GameSettings.BOARD_QTY; // tamanho da board na janela de jogo
   boardPadding = 0.2 * boardSize;
   padding = 0.15 * boardSize/(GameSettings.SLOTS+1);  // tamanho do padding em relacao a board
@@ -58,6 +57,7 @@ void setup() {
   level = GameSettings.INITIAL_LEVEL;
   memoryCap = GameSettings.INITIAL_MEMORY_CAP * (1/difficultyMultiplier);
   levelCap = GameSettings.INITIAL_LEVEL_CAP * difficultyMultiplier;
+  startAtLevel(GameSettings.INITIAL_LEVEL);
 
   memoryWidth = (boardSize * GameSettings.BOARD_QTY) / (1 +  0.15+ 1/4.0 * 0.15 +  2 * 0.05 );
   memoryHeight = 0.15 * memoryWidth;
@@ -336,6 +336,15 @@ void drawBoard(Board[] tabuleiro) {
   popMatrix();
 }
 
+void startAtLevel(int nivel){
+  for(int i = 1; i < nivel; i++){
+    levelCap += pow(level, 0.5) * difficultyMultiplier * levelCap;
+    memoryCap = memoryCap * 2;
+    for (int j = 0; j< campo.length; j++) {
+      campo[j].levelUp();
+    }
+  }
+}
 
 void keyReleased() {
   redraw();
