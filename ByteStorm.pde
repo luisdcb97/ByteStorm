@@ -39,12 +39,14 @@ private float aidButtonSize;
 private boolean doublePiece;
 
 
-void setup() {  
+void setup() {
   //fullScreen();
   size(640, 480);
   noStroke();
   noLoop();
   
+  title = loadFont( sketchPath() + File.separator + "data" + File.separator + fontName);
+
   boolean read = readFile(GameSettings.FOLDERNAME + File.separator + GameSettings.FILENAME);
   
   difficultyMultiplier = GameSettings.decodeDifficulty(GameSettings.DIFFICULTY);
