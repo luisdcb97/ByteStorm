@@ -45,7 +45,7 @@ void setup() {
   noStroke();
   noLoop();
   
-  boolean read = readFile(GameSettings.FOLDERNAME + "/" + GameSettings.FILENAME);
+  boolean read = readFile(GameSettings.FOLDERNAME + File.separator + GameSettings.FILENAME);
   
   difficultyMultiplier = GameSettings.decodeDifficulty(GameSettings.DIFFICULTY);
     
