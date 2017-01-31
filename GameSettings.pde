@@ -7,6 +7,8 @@ public static class GameSettings{
   public static float INITIAL_MEMORY_CAP = 250f;
   public static float INITIAL_LEVEL_CAP = 100f;
   
+  public static String FILENAME = "gameSave.txt";
+  public static String FOLDERNAME = "Saves";
   
   
   

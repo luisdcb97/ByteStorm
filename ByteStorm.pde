@@ -1,4 +1,5 @@
 import java.util.Hashtable;
+import java.io.*;
 
 private Board[] campo;  // tabuleiro de jogo
 private float score;  // pontuacao
@@ -27,6 +28,10 @@ private float memoryHeight;
 private float levelWidth;
 private float levelHeight;
 
+private float saveX;
+private float saveY;
+private float saveWidth;
+private float saveHeight;
 
 private Hashtable<String, Integer> aidButtons = new Hashtable<String, Integer>();
 
@@ -39,8 +44,17 @@ void setup() {
   size(640, 480);
   noStroke();
   noLoop();
-
+  
+  boolean read = readFile(GameSettings.FOLDERNAME + "/" + GameSettings.FILENAME);
+  
   difficultyMultiplier = GameSettings.decodeDifficulty(GameSettings.DIFFICULTY);
+    
+  if(!read){
+    memoryCap = GameSettings.INITIAL_MEMORY_CAP * (1/difficultyMultiplier);
+    levelCap = GameSettings.INITIAL_LEVEL_CAP * difficultyMultiplier;
+    score = 0;
+    level = GameSettings.INITIAL_LEVEL;
+  }
 
   boardSize = 0.6 * min(width, height) / GameSettings.BOARD_QTY; // tamanho da board na janela de jogo
   boardPadding = 0.2 * boardSize;
@@ -52,12 +66,6 @@ void setup() {
   for (int i = 0; i < campo.length; i++) {
     campo[i] = new Board(GameSettings.SLOTS, slotSize, padding, GameSettings.DIFFICULTY, color(175), color(200));
   }
-
-  score = 0;
-  level = GameSettings.INITIAL_LEVEL;
-  memoryCap = GameSettings.INITIAL_MEMORY_CAP * (1/difficultyMultiplier);
-  levelCap = GameSettings.INITIAL_LEVEL_CAP * difficultyMultiplier;
-  startAtLevel(GameSettings.INITIAL_LEVEL);
 
   memoryWidth = (boardSize * GameSettings.BOARD_QTY) / (1 +  0.15+ 1/4.0 * 0.15 +  2 * 0.05 );
   memoryHeight = 0.15 * memoryWidth;
@@ -73,6 +81,15 @@ void setup() {
   aidButtons.put("elimina", 2);
   aidButtons.put("cria", 3);
 
+  saveX=25;
+  saveY=25;
+  saveHeight=50;
+  saveWidth=100;
+
+  if(read){
+    startAtLevel(level);
+  }
+
   lost = false;
   doublePiece = false;
 }
@@ -83,8 +100,8 @@ void draw() {
   drawBoard(campo);
   
   drawScore();
+  drawSaveButton();
   drawAidButtons();
-
 
   if (lost == true) {
     defeat();
@@ -95,6 +112,68 @@ void draw() {
     fill(25, 25, 25, 150);
     rect(0, 0, width, height);
   }
+}
+
+public boolean readFile(String name){
+  File fich = new File(sketchPath() + name);
+  if(!fich.exists() || !fich.isFile()){
+    // file does not exist or is a directory
+    return false;
+  }
+  
+  String lines[] = loadStrings(sketchPath() + name);
+  
+  if(lines.length != 7){
+    System.out.println("Wrong number of lines in savefile");
+    return false;
+  }
+  for(int i = 0; i < lines.length; i++){
+    if(!lines[i].contains("=")){
+      System.out.println("Missing attribuition on line " + i);
+      System.out.println("Correct Form:\n\tATTRIBUTE=VALUE");
+      return false;
+    }
+  }
+  
+  GameSettings.DIFFICULTY = lines[0].substring(lines[0].indexOf("=") + "=".length(),lines[0].length());
+  GameSettings.SLOTS = Integer.valueOf(lines[1].substring(lines[1].indexOf("=") + "=".length(),lines[1].length()));
+  GameSettings.BOARD_QTY = Integer.valueOf(lines[2].substring(lines[2].indexOf("=") + "=".length(),lines[2].length()));
+  level = Integer.valueOf(lines[3].substring(lines[3].indexOf("=") + "=".length(),lines[3].length()));
+  levelCap = Float.valueOf(lines[4].substring(lines[4].indexOf("=") + "=".length(),lines[4].length()));
+  memoryCap = Float.valueOf(lines[5].substring(lines[5].indexOf("=") + "=".length(),lines[5].length()));
+  score = Float.valueOf(lines[6].substring(lines[6].indexOf("=") + "=".length(),lines[6].length()));
+  
+  /*System.out.println(GameSettings.DIFFICULTY);
+  System.out.println(GameSettings.SLOTS);
+  System.out.println(GameSettings.BOARD_QTY);
+  System.out.println(level);
+  System.out.println(levelCap);
+  System.out.println(memoryCap);
+  System.out.println(score);*/
+  
+  return true;
+}
+
+public void writeFile(String name){
+    String lines[] = new String[7];
+    
+    lines[0] = "DIFFICULTY=" + GameSettings.DIFFICULTY;
+    lines[1] = "SLOTS=" + GameSettings.SLOTS;
+    lines[2] = "BOARDS=" + GameSettings.BOARD_QTY;
+    lines[3] = "LEVEL=" + level;
+    lines[4] = "INI_LEV_CAP=" + levelCap;
+    lines[5] = "INI_MEM_CAP=" + memoryCap;
+    lines[6] = "CUR_SCORE=" + score;
+    
+    
+    saveStrings(sketchPath() + name, lines);
+    System.out.println("saved");
+  
+}
+
+void drawSaveButton(){
+  fill(0);
+  rect(25, 25, 100, 50);
 }
 
 void drawAidButtons() {
@@ -337,9 +416,7 @@ void drawBoard(Board[] tabuleiro) {
 }
 
 void startAtLevel(int nivel){
-  for(int i = 1; i < nivel; i++){
-    levelCap += pow(level, 0.5) * difficultyMultiplier * levelCap;
-    memoryCap = memoryCap * 2;
+  for(int i = GameSettings.INITIAL_LEVEL; i < nivel; i++){
     for (int j = 0; j< campo.length; j++) {
       campo[j].levelUp();
     }
@@ -408,7 +485,11 @@ void mouseReleased() {
         levelIncrease();
       } else if ( pow((mouseX - aidButtonSize), 2) + pow((mouseY - (height - (aidButtons.get("duplica") *1.5 +1) * aidButtonSize) ), 2) <= pow(aidButtonSize/2, 2) ) {
         doublePiece = !doublePiece;
-      }
-    }
+      } else if(mouseX >= saveX && mouseX <= saveX + saveWidth && mouseY >= saveY && mouseY <= saveY + saveHeight){
+          writeFile(GameSettings.FOLDERNAME + "/" + GameSettings.FILENAME);
+      } 
+    } 
+    
+    
   }
 }
